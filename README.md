@@ -4,13 +4,13 @@ The service store aggergated Flow log into structure like
 ```
 Map<Integer,Map<String,Flow>> aggMap = ConcurrentHashMap<>();
 ```
-Which the Integer key is Hour and String key is combination of "src_app + dest_app + vpc_id" seperated by "|".
+Which the Integer key is **Hour** and String key is combination of **"src_app + dest_app + vpc_id"** seperated by "|".
 
 The ConcurrentHashMap is a threadsafe and efficient for concurrent access.
 
 AtomicInteger used to make aggregation calculation Atomic
 
-Since hours increasing it required a separate process to clean up old hour if no longer required.
+Since hours increasing it required a separate process to clean up old hours if no longer required.
 
 ## Scalability
 Service relay on ConcurrentHashMap and performance bottleneck would be concurrency limit of ConcurrentHashMap, 
