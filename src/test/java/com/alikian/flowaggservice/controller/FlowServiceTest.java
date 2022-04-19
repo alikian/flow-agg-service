@@ -49,7 +49,7 @@ public class FlowServiceTest {
         long start = System.currentTimeMillis();
         ExecutorService executor = Executors.newFixedThreadPool(totalThread);
         for (int thread = 0; thread < totalThread; thread++) {
-            executor.execute(parallelTest(thread, repeat));
+            executor.execute(parallelTest(repeat));
         }
 
         int count = 0;
@@ -78,16 +78,14 @@ public class FlowServiceTest {
         System.out.println("TPS in write: " + totalThread * repeat / (end - start) * 1000);
     }
 
-    private Runnable parallelTest(int threadNumber, int repeat) {
+    private Runnable parallelTest(int repeat) {
         return () -> {
-//            System.out.println("I am Thread : " + threadNumber);
             try {
                 for (int i = 0; i < repeat; i++) {
                     List<Flow> flows = mapper.readValue(payload, new TypeReference<List<Flow>>() {
                     });
                     flowService.addFlows(flows);
                 }
-//                System.out.println("I am Thread Done: " + threadNumber);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
