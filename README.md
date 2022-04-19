@@ -1,5 +1,34 @@
 # Flow Aggregation Service
 
+The service store aggergated Flow log into structure like
+```
+Map<Integer,Map<String,Flow>> aggMap = ConcurrentHashMap<>();
+```
+Which the Integer key is Hour and String key is combination of "src_app + dest_app + vpc_id" seperated by "|".
+
+The ConcurrentHashMap is a threadsafe and efficient for concurrent access.
+
+AtomicInteger used to make aggregation calculation Atomic
+
+Since hours increasing it required a separate process to clean up old hour if no longer required.
+
+## Scalability
+Service relay on ConcurrentHashMap and performance bottleneck would be concurrency limit of ConcurrentHashMap, 
+specialty when new Aggregation Flow added to Map, this process it required lock on part of map.
+
+Solution in not horizontally accessible, a better solution is to use a time-series database or writing to 
+streaming service like Kafka or AWS Kinesis Stream and process it.
+
+## Test 
+Code has a test that call controller in a multi-thread load test, 30 threads and each thread send 10,000 request.
+The test result over 300,000 TPS on i7 laptop
+
+
+## To start service
+```
+mvn spring-boot:run
+```
+
 ### Example Post
 ```
 curl -X POST "http://localhost:8080/flows" \

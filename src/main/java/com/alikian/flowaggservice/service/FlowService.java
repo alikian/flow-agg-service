@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class FlowService {
 
-    Lock aggHour = new ReentrantLock();
     final Map<Integer, Map<String, Flow>> aggAllHoursFlowMap = new ConcurrentHashMap<>();
 
     public void addFlows(List<Flow> flows) {

@@ -42,26 +42,27 @@ public class FlowServiceTest {
     }
 
     @Test
-    public void simpleTest() throws JsonProcessingException, InterruptedException {
+    public void simpleTest() throws InterruptedException {
 
-        int totalThread = 10;
-        int repeat = 100;
+        int totalThread = 30;
+        int repeat = 10000;
+        long start = System.currentTimeMillis();
         ExecutorService executor = Executors.newFixedThreadPool(totalThread);
         for (int thread = 0; thread < totalThread; thread++) {
             executor.execute(parallelTest(thread, repeat));
         }
 
         int count = 0;
-
         executor.shutdown();
         while (!executor.awaitTermination(100, TimeUnit.MILLISECONDS)) {
-            System.out.println("Waiting " + count);
+            System.out.println("Waiting ms " + count * 100);
             count++;
         }
 
+        long end = System.currentTimeMillis();
 
         List<Flow> aggFlows = flowService.getFlows(1);
-        Map<String, List<Flow>> flowsGroup = aggFlows.stream().collect(Collectors.groupingBy(flow -> flow.getKey()));
+        Map<String, List<Flow>> flowsGroup = aggFlows.stream().collect(Collectors.groupingBy(Flow::getKey));
 
         Flow flowAgg1 = flowsGroup.get("foo|bar|vpc-0").get(0);
         assertThat(flowAgg1.getBytesTx()).isEqualTo(300 * repeat * totalThread);
@@ -74,6 +75,7 @@ public class FlowServiceTest {
         List<Flow> aggFlows3 = flowService.getFlows(3);
         assertThat(aggFlows3.isEmpty()).isTrue();
 
+        System.out.println("TPS in write: " + totalThread * repeat / (end - start) * 1000);
     }
 
     private Runnable parallelTest(int threadNumber, int repeat) {
