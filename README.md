@@ -1,6 +1,7 @@
 # Flow Aggregation Service
 
-Service developed using Spring Boot. The service store aggregated Flow log into structure like
+Service developed using Spring Boot. Due to nature of this traffic I used memory and not any database as 
+explained Scalability. The service store aggregated Flow log into structure like
 ```
 Map<Integer,Map<String,Flow>> aggMap = ConcurrentHashMap<>();
 ```
@@ -17,7 +18,8 @@ Service relay on ConcurrentHashMap and performance bottleneck would be concurren
 specialty when new Aggregation Flow added to Map, this process it required lock on part of map.
 
 Solution in not horizontally accessible, a better solution is to use a time-series database or writing to 
-streaming service like Kafka or AWS Kinesis Stream and process it.
+streaming service like Kafka or AWS Kinesis Stream and process it into a distributed cache like Redis, memcashed 
+or Couchbase. 
 
 ## Test 
 Code has a test that call controller in a multi-thread load test, 30 threads and each thread send 10,000 request.
