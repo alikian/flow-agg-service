@@ -21,7 +21,7 @@ streaming service like Kafka or AWS Kinesis Stream and process it.
 
 ## Test 
 Code has a test that call controller in a multi-thread load test, 30 threads and each thread send 10,000 request.
-The test result over 300,000 TPS on i7 laptop
+The send operation test result over 300,000 TPS on i7 laptop
 
 
 ## To start service
