@@ -1,6 +1,6 @@
 # Flow Aggregation Service
 
-The service store aggergated Flow log into structure like
+Service developed using Spring Boot. The service store aggregated Flow log into structure like
 ```
 Map<Integer,Map<String,Flow>> aggMap = ConcurrentHashMap<>();
 ```
@@ -25,6 +25,7 @@ The send operation test result over 300,000 TPS on i7 laptop
 
 
 ## To start service
+This is a Spring Boot application, to start run this command:
 ```
 mvn spring-boot:run
 ```
